@@ -1,26 +1,24 @@
-﻿namespace DataAccess.Models;
+﻿using System;
+using DataAccess.Interface;
+namespace DataAccess.Models;
+public class Electron(byte quantity) : IParticle
+{
+    public Guid ID { get; private set; } = Guid.NewGuid();
+    public decimal Mass { get; set; } = 9.1093837015e-31m; // масса электрона в кг
+    public int Charge { get; set; } = -1;
+    public double Spin { get; set; } = 0.5;
+    public byte NumberOfChargeCarriers { get; set; } = quantity;
+}
 
-public abstract partial class Частица
-{
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public abstract double Масса { get; set; }
-    public abstract sbyte Спин { get; set; }
-    public abstract sbyte Заряд { get; }
-    public abstract byte КолвоНесущихЗаряд { get; set; }
 
-}
-public sealed partial class Электрон : Частица
+public class Nucleus(byte protons, byte neutrons) : IParticle
 {
-    public override double Масса { get; set; } = 9.10938356e-31; // Масса электрона в кг
-    public override sbyte Спин { get; set; }
-    public override sbyte Заряд => -1;
-    public override byte КолвоНесущихЗаряд { get; set; } = 0;
+    public Guid ID { get; private set; } = Guid.NewGuid();
+    public decimal Mass { get; set; } = 1.67262192369e-27m; // точная масса протона в кг
+    public int Charge { get; set; } = 1;
+    public double Spin { get; set; } = 0.5;
+    public byte NumberOfChargeCarriers { get; set; } = protons;
+    public byte TotalParticles { get; set; } = (byte)(protons + neutrons);
 }
-public sealed partial class Ядро : Частица
-{
-    public override double Масса { get; set; } = 1.6726219e-27; // Масса протона в кг
-    public override sbyte Спин { get; set; }
-    public override sbyte Заряд => 1;
-    public override byte КолвоНесущихЗаряд { get; set; } = 1;
-    public int КолвоЧастиц { get; set; } = 1;
-}
+
+

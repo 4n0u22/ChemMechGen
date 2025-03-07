@@ -1,5 +1,4 @@
-﻿using System;
-using DataAccess.Interface;
+﻿using DataAccess.Interface;
 namespace DataAccess.Models;
 public class Electron(byte quantity) : IParticle
 {
@@ -10,7 +9,6 @@ public class Electron(byte quantity) : IParticle
     public byte NumberOfChargeCarriers { get; set; } = quantity;
 }
 
-
 public class Nucleus(byte protons, byte neutrons) : IParticle
 {
     public Guid ID { get; private set; } = Guid.NewGuid();
@@ -20,5 +18,3 @@ public class Nucleus(byte protons, byte neutrons) : IParticle
     public byte NumberOfChargeCarriers { get; set; } = protons;
     public byte TotalParticles { get; set; } = (byte)(protons + neutrons);
 }
-
-

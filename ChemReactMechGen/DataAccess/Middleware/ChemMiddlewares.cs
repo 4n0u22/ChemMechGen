@@ -3,7 +3,82 @@ using System.Collections.Generic;
 using DataAccess.Models;
 
 namespace DataAccess.Middleware;
+ public class MoleculeCalculator
+{
+    public decimal CalculateMolecularWeight(Molecule molecule)
+    {
+        return molecule.Atoms.Sum(a => a.AtomicWeight);
+    }
+}
 
+    public class ReactionBalancer
+    {
+        public bool IsBalanced(Reaction reaction)
+        {
+            if (reaction == null || reaction.Reactants == null || reaction.Products == null)
+            {
+                return false;
+            }
+
+            if (!reaction.Reactants.Any() || !reaction.Products.Any())
+            {
+                return false;
+            }
+
+            var reactantAtoms = CountAtoms(reaction.Reactants);
+            var productAtoms = CountAtoms(reaction.Products);
+
+            if (reactantAtoms.Count != productAtoms.Count)
+            {
+                return false;
+            }
+
+            foreach (var element in reactantAtoms)
+            {
+                if (!productAtoms.TryGetValue(element.Key, out int productCount) || productCount != element.Value)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private Dictionary<byte, int> CountAtoms(List<Molecule> molecules)
+        {
+            var atomCounts = new Dictionary<byte, int>();
+
+            foreach (var molecule in molecules)
+            {
+                if (molecule?.Atoms == null || molecule.Coefficient < 1)
+                {
+                    continue;
+                }
+
+                foreach (var atom in molecule.Atoms)
+                {
+                    if (atom == null)
+                    {
+                        continue;
+                    }
+
+                    byte atomicNumber = atom.AtomicNumber;
+                    int count = molecule.Coefficient;
+
+                    if (atomCounts.ContainsKey(atomicNumber))
+                    {
+                        atomCounts[atomicNumber] += count;
+                    }
+                    else
+                    {
+                        atomCounts[atomicNumber] = count;
+                    }
+                }
+            }
+
+            return atomCounts;
+        }
+    }
 public static class PeriodicTableGenerator
 {
 public static List<Atom> GeneratePeriodicTable()
@@ -130,4 +205,5 @@ new() { Name = "Tennessine", Symbol = "Ts", AtomicNumber = 117, Period = 7, Grou
 new() { Name = "Oganesson", Symbol = "Og", AtomicNumber = 118, Period = 7, Group = 18, AtomNucleus = new Nucleus(118, 176), Electrons = new Electron(118), IonizationEnergy = 8.4m, ElectronAffinity = 0m, Electronegativity = 1.3m, AtomicRadius = 1.50m, ValenceElectrons = 18 },
 		
 	];
+}
 }
